@@ -65,6 +65,7 @@ For the current 1024 x 1024 `modely-2025-premium` template, the cartoon cat comp
 - Left lower side-door island: `69,570,165,222` with `--rotate-box-cw90`.
 - Right lower side-door island: `785,573,165,222` with `--rotate-box-ccw90`.
 - Hood or bonnet hero island: `376,111,269,227` with `--rotate-box` for 180 degrees.
+- Front skirt / front bumper island: `245,9,532,106` with `--rotate-front-bumper` for 180 degrees (equivalent to `--rotate-box 245,9,532,106`). For this model, interpret “front skirt” as this model-specific front bumper island and do not rotate unrelated lower-center pieces.
 
 These coordinates are template-specific and must be re-inspected if the official template changes. The two side-door transforms intentionally differ because the left and right UV islands map to opposite sides of the vehicle.
 
