@@ -1,6 +1,6 @@
 ---
 name: tesla-wrap
-description: "Create or revise Tesla custom-wrap PNGs for every vehicle template in teslamotors/custom-wraps while preserving the selected official UV mask, geometry, orientation, optional labels, and Tesla file limits."
+description: "Create or revise Tesla custom-wrap PNGs for every vehicle template in teslamotors/custom-wraps while preserving the selected official UV mask, geometry, world-physical subject orientation, optional labels, and Tesla file limits."
 ---
 
 # Tesla custom wraps for all official models
@@ -34,14 +34,24 @@ Use the supplied cartoon cat wrap as a composition reference, while using the se
 - Roof, sunroof, glass, windows, wheel openings, sensors, black regions, transparent regions, and every other protected island receive no generated artwork. Leave the original template pixels unchanged.
 - If a selected vehicle has fewer or differently shaped panels, remap the roles from its own `vehicle_image.png` and `template.png`; never transfer coordinates from another vehicle.
 
+## World-physical orientation rule
+
+Every subject must follow the real vehicle coordinate system after UV mapping:
+
+- Keep world up and down consistent with gravity. Heads, upright objects, sky, and vertical lettering point up in the car view; feet, wheels, ground, and shadows point down.
+- Keep the vehicle front and rear direction consistent. A subject may face left or right, but it must not become upside down or sideways merely because its panel is rotated in the UV layout.
+- For side panels, rotate or mirror the source crop only as needed to make the final car-view subject upright. Check both left and right sides independently because their UV orientations can differ.
+- For hood, roof, hatch, bumper, mirror, and narrow strips, use the panel surface normal and `vehicle_image.png` to decide the transform. A 180 degree UV transform is valid only when it produces the correct real-world car view, and it must be rechecked after composition.
+- Do not use a global canvas rotation as a substitute for per-panel orientation. Intentional abstract pattern rotation does not excuse an upside-down main subject.
+
 ## Workflow
 
 1. Download the selected official template and vehicle reference image. The convenience script can fetch one model or all models into a local clone-shaped directory.
 2. Use the built-in image generation tool for the visual artwork. Label the selected template as the geometry reference, the vehicle image as the car-view reference, user photos as identity references, and any prior wrap as a style reference. Ask for a flat UV texture with a transparent background and no scene, car render, or backdrop. State that artwork may change only exact opaque white template pixels; all alpha-0, dark, transparent, glass, roof, sunroof, window, wheel, sensor, seam, and other non-white pixels must remain untouched. Do not ask the model to render text; raster text is added deterministically afterward.
 3. Match the selected model's panel count and body shape. Keep faces and focal graphics inside their intended body-panel islands. Do not copy one model's bounds, rotations, or panel assumptions to another model.
-4. Orient the UV artwork for the selected car view. Inspect `vehicle_image.png` and the official template to determine which islands are left, right, front, rear, roof, mirror, or bumper. Use `--rotate-box x,y,width,height` for any panel that must be inverted; repeat the option for multiple regions. `--rotate-front-bumper` is a convenience option only when a matching `--front-bumper-box` is supplied. The catalog includes one legacy Premium box `245,9,532,106`.
-5. Add an exact name or label only after masking. Use `--name` with a Chinese-capable font and an explicitly inspected `--name-box` wholly inside an editable white panel. The script now refuses a missing name box so a coordinate from another vehicle cannot be reused. Set `--name-angle 180` when text belongs to an upside-down region. The script clips text and backgrounds back to the official mask.
-6. Run the helper with `--model` or an explicit `--template`, inspect the final PNG, and check its reported protected-pixel diff and alpha diff are both zero. If the file is too large, retry with `--quantize 256` or a smaller palette, then re-check the invariants and preview.
+5. Perform a world-up review in the car view. Verify every face, person, animal, object, horizon, wheel, shadow, and text baseline against gravity and the vehicle front/rear direction. Fix each panel transform before continuing.
+6. Add an exact name or label only after masking. Use `--name` with a Chinese-capable font and an explicitly inspected `--name-box` wholly inside an editable white panel. The script now refuses a missing name box so a coordinate from another vehicle cannot be reused. Set `--name-angle 180` only when the selected panel mapping requires it, then verify the text is upright in the car view. The script clips text and backgrounds back to the official mask.
+7. Run the helper with `--model` or an explicit `--template`, inspect the final PNG, and check its reported protected-pixel and alpha diffs are both zero. If the file is too large, retry with `--quantize 256` or a smaller palette, then re-check the invariants and preview.
 
 ## Deterministic helper
 
@@ -74,5 +84,5 @@ Confirm all of the following before handing off the file:
 - protected-pixel diff is 0 and alpha diff is 0;
 - no unintended text, badge, watermark, rendered car, backdrop, or artwork outside the selected official editable mask remains;
 - every template alpha-0 pixel remains transparent in the final PNG;
-- the final image has been visually inspected against the selected `vehicle_image.png`, including bumper and side-panel directions;
+- the final image has been visually inspected against the selected `vehicle_image.png`, including bumper and side-panel directions and world-physical subject orientation;
 - the selected slug and template dimensions are recorded in the delivery note or command log.
