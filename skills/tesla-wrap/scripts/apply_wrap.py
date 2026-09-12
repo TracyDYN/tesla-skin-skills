@@ -243,7 +243,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--rotate-front-bumper", action="store_true", help="将前保险杠区域旋转 180°")
     parser.add_argument("--front-bumper-box", type=parse_box, help="前保险杠区域 x,y,width,height；其他车型需显式提供")
     parser.add_argument("--name", help="需要叠加的精确文字，例如 八月")
-    parser.add_argument("--name-box", type=parse_box, default=(414, 31, 212, 58), help="名字区域 x,y,width,height")
+    parser.add_argument("--name-box", type=parse_box, help="名字区域 x,y,width,height；使用 --name 时必须显式提供")
     parser.add_argument("--name-angle", type=int, choices=(0, 180), default=0, help="名字旋转角度")
     parser.add_argument("--font", help="中文字体路径")
     parser.add_argument("--font-size", type=int, default=48)
@@ -285,6 +285,8 @@ def main() -> int:
     for rotate_box in rotate_boxes:
         rotate_clipped(output, template, rotate_box)
     if args.name:
+        if args.name_box is None:
+            raise ValueError("使用 --name 时必须按所选模板显式提供 --name-box")
         draw_name(
             output,
             template,

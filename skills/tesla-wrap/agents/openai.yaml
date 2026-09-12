@@ -1,4 +1,4 @@
 interface:
   display_name: "Tesla Custom Wrap"
   short_description: "Build masked Tesla wrap PNGs for every official model"
-  default_prompt: "Use $tesla-wrap to create a Tesla custom wrap for the exact model slug I provide, preserving its official template geometry."
+  default_prompt: "Use $tesla-wrap to create a Tesla custom wrap for the exact model slug I provide, preserving its official template geometry; place hero art on the hood and four main doors, accents on secondary panels, and no art on sunroof, glass, or protected regions."

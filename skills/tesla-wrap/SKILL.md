@@ -22,13 +22,24 @@ Use the folder slug exactly as written. Each official folder contains its own `t
 - Do not let generated artwork redraw the template, windows, wheel openings, sensors, or seams. Compose the artwork through `scripts/apply_wrap.py`, which restores protected pixels and reports the protected-pixel and alpha diffs.
 - Preserve the selected template dimensions. Export PNG under 1,000,000 bytes, with an ASCII filename containing only letters, digits, and underscores and at most 30 characters including `.png`. This skill keeps the user's stricter filename rule even though the official README also mentions dashes and spaces.
 
+## Panel role mapping from the reference wrap
+
+Use the supplied cartoon cat wrap as a composition reference, while using the selected official template as the only geometry source:
+
+- Hood or bonnet islands are the primary hero area. Put one large focal subject there, such as the main cat portrait.
+- The four main door islands are the other primary hero areas. Put one clear portrait or one major subject per door and keep the face inside that door island.
+- Front and rear fenders, quarter panels, hatch pieces, and broad secondary islands are for supporting motifs such as clouds, hearts, stars, color blocks, or cropped background texture.
+- Bumpers, mirrors, rocker strips, and narrow islands are for small repeat motifs or color accents. Avoid placing a face, long text, or a detailed scene in a narrow island.
+- Roof, sunroof, glass, windows, wheel openings, sensors, black regions, transparent regions, and every other protected island receive no generated artwork. Leave the original template pixels unchanged.
+- If a selected vehicle has fewer or differently shaped panels, remap the roles from its own `vehicle_image.png` and `template.png`; never transfer coordinates from another vehicle.
+
 ## Workflow
 
 1. Download the selected official template and vehicle reference image. The convenience script can fetch one model or all models into a local clone-shaped directory.
-2. Use the built-in image generation tool for the visual artwork. Label the selected template as the geometry reference, the vehicle image as the car-view reference, user photos as identity references, and any prior wrap as a style reference. Ask for a flat UV texture. Repeat the protected-region invariant in the prompt. Do not ask the model to render text; raster text is added deterministically afterward.
+2. Use the built-in image generation tool for the visual artwork. Label the selected template as the geometry reference, the vehicle image as the car-view reference, user photos as identity references, and any prior wrap as a style reference. Ask for a flat UV texture. State that artwork may change only exact opaque white template pixels; all dark, transparent, glass, roof, sunroof, window, wheel, sensor, seam, and other non-white pixels must remain untouched. Do not ask the model to render text; raster text is added deterministically afterward.
 3. Match the selected model's panel count and body shape. Keep faces and focal graphics inside their intended body-panel islands. Do not copy one model's bounds, rotations, or panel assumptions to another model.
 4. Orient the UV artwork for the selected car view. Inspect `vehicle_image.png` and the official template to determine which islands are left, right, front, rear, roof, mirror, or bumper. Use `--rotate-box x,y,width,height` for any panel that must be inverted; repeat the option for multiple regions. `--rotate-front-bumper` is a convenience option only when a matching `--front-bumper-box` is supplied. The catalog includes one legacy Premium box `245,9,532,106`.
-5. Add an exact name or label only after masking. Use `--name` with a Chinese-capable font and a box wholly inside an editable white panel. Set `--name-angle 180` when text belongs to an upside-down region. The script clips text and backgrounds back to the official mask.
+5. Add an exact name or label only after masking. Use `--name` with a Chinese-capable font and an explicitly inspected `--name-box` wholly inside an editable white panel. The script now refuses a missing name box so a coordinate from another vehicle cannot be reused. Set `--name-angle 180` when text belongs to an upside-down region. The script clips text and backgrounds back to the official mask.
 6. Run the helper with `--model` or an explicit `--template`, inspect the final PNG, and check its reported protected-pixel diff and alpha diff are both zero. If the file is too large, retry with `--quantize 256` or a smaller palette, then re-check the invariants and preview.
 
 ## Deterministic helper
@@ -48,13 +59,10 @@ python scripts/apply_wrap.py \
   --model model3 \
   --template-root official_custom_wraps \
   --design generated_design.png \
-  --output Cat_Model3_Example.png \
-  --rotate-front-bumper \
-  --name August --name-box 414,31,212,58 --name-angle 180 \
-  --font "C:\\Windows\\Fonts\\msyh.ttc"
+  --output Cat_Model3_Example.png
 ```
 
-For a direct template path, replace `--model` and `--template-root` with `--template path/to/template.png`. Omit `--name` when the wrap should have no name badge. Use `--rotate-box` for model-specific regions. Use `--rotate-front-bumper` only with a verified box for the selected model. Use `--quantize 256` only when needed to meet the byte limit; it changes editable colors but protected pixels are restored and validated.
+For a direct template path, replace `--model` and `--template-root` with `--template path/to/template.png`. Omit `--name` when the wrap should have no name badge. When adding a label, first inspect the selected template and pass both `--name` and a matching `--name-box x,y,width,height`; do not reuse the old Premium coordinates. Use `--rotate-box` for model-specific regions. Use `--rotate-front-bumper` only with a verified box for the selected model. Use `--quantize 256` only when needed to meet the byte limit; it changes editable colors but protected pixels are restored and validated.
 
 ## Completion checks
 
