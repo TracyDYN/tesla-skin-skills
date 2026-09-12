@@ -45,9 +45,19 @@ Every subject must follow the real vehicle coordinate system after UV mapping:
 - For hood, roof, hatch, bumper, mirror, and narrow strips, use the panel surface normal and `vehicle_image.png` to decide the transform. A 180 degree UV transform is valid only when it produces the correct real-world car view, and it must be rechecked after composition.
 - Do not use a global canvas rotation as a substitute for per-panel orientation. Intentional abstract pattern rotation does not excuse an upside-down main subject.
 
+### Cross-model cat-wrap direction defaults
+
+For every supported vehicle that has the corresponding panel roles, use these direction defaults for this cartoon cat-wrap composition:
+
+- Left side-door hero subject: rotate the local UV region clockwise 90 degrees with `--rotate-box-cw90`.
+- Right side-door hero subject: rotate the local UV region counter-clockwise 90 degrees with `--rotate-box-ccw90`.
+- Hood or bonnet hero subject: rotate the local UV region 180 degrees with `--rotate-box`.
+
+These are shared direction rules across vehicle models, not global-canvas rotations. Confirm the resulting car view against each model's `vehicle_image.png`; if an official UV layout differs materially, preserve the same world-up intent and record a model-specific override.
+
 ### Model Y 2025 Premium cat-wrap transform map
 
-For the current 1024 x 1024 `modely-2025-premium` template, the cartoon cat composition uses these verified local UV transforms. Apply them independently from the unrotated source artwork; never stack them on an already transformed output:
+For the current 1024 x 1024 `modely-2025-premium` template, the cartoon cat composition instantiates the cross-model defaults with these verified local UV transforms. Apply them independently from the unrotated source artwork; never stack them on an already transformed output:
 
 - Left lower side-door island: `69,570,165,222` with `--rotate-box-cw90`.
 - Right lower side-door island: `785,573,165,222` with `--rotate-box-ccw90`.
