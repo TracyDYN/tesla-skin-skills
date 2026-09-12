@@ -29,6 +29,7 @@ Use the supplied cartoon cat wrap as a composition reference, while using the se
 
 - Hood or bonnet islands are the primary hero area. Put one large focal subject there, such as the main cat portrait.
 - The four main door islands are the other primary hero areas. Put one clear portrait or one major subject per door and keep the face inside that door island.
+- Keep every primary subject fully inside one editable white panel island. A cat's ears, eyes, face, body, paws, or tail must never cross an official seam into an adjacent island. Scale the subject down and leave a visible safety margin when needed; use adjacent islands only for simple supporting motifs.
 - Front and rear fenders, quarter panels, hatch pieces, and broad secondary islands are for supporting motifs such as clouds, hearts, stars, color blocks, or cropped background texture.
 - Bumpers, mirrors, rocker strips, and narrow islands are for small repeat motifs or color accents. Avoid placing a face, long text, or a detailed scene in a narrow island.
 - Roof, sunroof, glass, windows, wheel openings, sensors, black regions, transparent regions, and every other protected island receive no generated artwork. Leave the original template pixels unchanged.
@@ -104,6 +105,7 @@ Confirm all of the following before handing off the file:
 - filename matches the allowed ASCII pattern and length;
 - protected-pixel diff is 0 and alpha diff is 0;
 - no unintended text, badge, watermark, rendered car, backdrop, or artwork outside the selected official editable mask remains;
+- every primary subject is fully contained within its intended single panel island, with no face, limb, or major detail crossing a seam;
 - every template alpha-0 pixel remains transparent in the final PNG;
 - the final image has been visually inspected against the selected `vehicle_image.png`, including bumper and side-panel directions and world-physical subject orientation;
 - the selected slug and template dimensions are recorded in the delivery note or command log.
