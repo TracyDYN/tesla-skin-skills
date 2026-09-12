@@ -1,4 +1,4 @@
 interface:
-  display_name: "Tesla Model Y Wrap"
-  short_description: "Build masked Tesla Model Y Premium wrap PNGs"
-  default_prompt: "Use $tesla-modely-wrap to create a Tesla Model Y 2025+ Premium wrap from my cat photos."
+  display_name: "Tesla Custom Wrap"
+  short_description: "Build masked Tesla wrap PNGs for every official model"
+  default_prompt: "Use $tesla-modely-wrap to create a Tesla custom wrap for the exact model slug I provide, preserving its official template geometry."

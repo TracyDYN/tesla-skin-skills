@@ -1,0 +1,87 @@
+{
+  "cybertruck": {
+    "display_name": "Cybertruck",
+    "template_path": "cybertruck/template.png",
+    "vehicle_image_path": "cybertruck/vehicle_image.png",
+    "template_url": "https://raw.githubusercontent.com/teslamotors/custom-wraps/master/cybertruck/template.png",
+    "vehicle_image_url": "https://raw.githubusercontent.com/teslamotors/custom-wraps/master/cybertruck/vehicle_image.png"
+  },
+  "model3": {
+    "display_name": "Model 3",
+    "template_path": "model3/template.png",
+    "vehicle_image_path": "model3/vehicle_image.png",
+    "template_url": "https://raw.githubusercontent.com/teslamotors/custom-wraps/master/model3/template.png",
+    "vehicle_image_url": "https://raw.githubusercontent.com/teslamotors/custom-wraps/master/model3/vehicle_image.png"
+  },
+  "model3-2024-base": {
+    "display_name": "Model 3 (2024+) Standard and Premium",
+    "template_path": "model3-2024-base/template.png",
+    "vehicle_image_path": "model3-2024-base/vehicle_image.png",
+    "template_url": "https://raw.githubusercontent.com/teslamotors/custom-wraps/master/model3-2024-base/template.png",
+    "vehicle_image_url": "https://raw.githubusercontent.com/teslamotors/custom-wraps/master/model3-2024-base/vehicle_image.png"
+  },
+  "model3-2024-performance": {
+    "display_name": "Model 3 (2024+) Performance",
+    "template_path": "model3-2024-performance/template.png",
+    "vehicle_image_path": "model3-2024-performance/vehicle_image.png",
+    "template_url": "https://raw.githubusercontent.com/teslamotors/custom-wraps/master/model3-2024-performance/template.png",
+    "vehicle_image_url": "https://raw.githubusercontent.com/teslamotors/custom-wraps/master/model3-2024-performance/vehicle_image.png"
+  },
+  "modely": {
+    "display_name": "Model Y",
+    "template_path": "modely/template.png",
+    "vehicle_image_path": "modely/vehicle_image.png",
+    "template_url": "https://raw.githubusercontent.com/teslamotors/custom-wraps/master/modely/template.png",
+    "vehicle_image_url": "https://raw.githubusercontent.com/teslamotors/custom-wraps/master/modely/vehicle_image.png"
+  },
+  "modely-2025-base": {
+    "display_name": "Model Y (2025+) Standard",
+    "template_path": "modely-2025-base/template.png",
+    "vehicle_image_path": "modely-2025-base/vehicle_image.png",
+    "template_url": "https://raw.githubusercontent.com/teslamotors/custom-wraps/master/modely-2025-base/template.png",
+    "vehicle_image_url": "https://raw.githubusercontent.com/teslamotors/custom-wraps/master/modely-2025-base/vehicle_image.png"
+  },
+  "modely-2025-performance": {
+    "display_name": "Model Y (2025+) Performance",
+    "template_path": "modely-2025-performance/template.png",
+    "vehicle_image_path": "modely-2025-performance/vehicle_image.png",
+    "template_url": "https://raw.githubusercontent.com/teslamotors/custom-wraps/master/modely-2025-performance/template.png",
+    "vehicle_image_url": "https://raw.githubusercontent.com/teslamotors/custom-wraps/master/modely-2025-performance/vehicle_image.png"
+  },
+  "modely-2025-premium": {
+    "display_name": "Model Y (2025+) Premium",
+    "template_path": "modely-2025-premium/template.png",
+    "vehicle_image_path": "modely-2025-premium/vehicle_image.png",
+    "template_url": "https://raw.githubusercontent.com/teslamotors/custom-wraps/master/modely-2025-premium/template.png",
+    "vehicle_image_url": "https://raw.githubusercontent.com/teslamotors/custom-wraps/master/modely-2025-premium/vehicle_image.png",
+    "front_bumper_box": [245, 9, 532, 106]
+  },
+  "modely-l": {
+    "display_name": "Model Y L",
+    "template_path": "modely-l/template.png",
+    "vehicle_image_path": "modely-l/vehicle_image.png",
+    "template_url": "https://raw.githubusercontent.com/teslamotors/custom-wraps/master/modely-l/template.png",
+    "vehicle_image_url": "https://raw.githubusercontent.com/teslamotors/custom-wraps/master/modely-l/vehicle_image.png"
+  },
+  "models-2021": {
+    "display_name": "Model S (2021+)",
+    "template_path": "models-2021/template.png",
+    "vehicle_image_path": "models-2021/vehicle_image.png",
+    "template_url": "https://raw.githubusercontent.com/teslamotors/custom-wraps/master/models-2021/template.png",
+    "vehicle_image_url": "https://raw.githubusercontent.com/teslamotors/custom-wraps/master/models-2021/vehicle_image.png"
+  },
+  "models-2025-plaid": {
+    "display_name": "Model S (2025+) Plaid",
+    "template_path": "models-2025-plaid/template.png",
+    "vehicle_image_path": "models-2025-plaid/vehicle_image.png",
+    "template_url": "https://raw.githubusercontent.com/teslamotors/custom-wraps/master/models-2025-plaid/template.png",
+    "vehicle_image_url": "https://raw.githubusercontent.com/teslamotors/custom-wraps/master/models-2025-plaid/vehicle_image.png"
+  },
+  "modelx-2021": {
+    "display_name": "Model X (2021+)",
+    "template_path": "modelx-2021/template.png",
+    "vehicle_image_path": "modelx-2021/vehicle_image.png",
+    "template_url": "https://raw.githubusercontent.com/teslamotors/custom-wraps/master/modelx-2021/template.png",
+    "vehicle_image_url": "https://raw.githubusercontent.com/teslamotors/custom-wraps/master/modelx-2021/vehicle_image.png"
+  }
+}
