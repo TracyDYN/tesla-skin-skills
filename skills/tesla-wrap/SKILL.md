@@ -56,6 +56,8 @@ For every supported vehicle that has the corresponding panel roles, use these di
 
 These are shared direction rules across vehicle models, not global-canvas rotations. Confirm the resulting car view against each model's `vehicle_image.png`; if an official UV layout differs materially, preserve the same world-up intent and record a model-specific override.
 
+For a 90-degree side-door transform, size the unrotated subject for its post-rotation bounding box. Leave visible safety margins on all four sides; do not fill the full height of a narrow vertical island. A subject that fits before rotation but is cropped, split, or touches a seam after rotation fails the layout check.
+
 ### Model Y 2025 Premium cat-wrap transform map
 
 For the current 1024 x 1024 `modely-2025-premium` template, the cartoon cat composition instantiates the cross-model defaults with these verified local UV transforms. Apply them independently from the unrotated source artwork; never stack them on an already transformed output:
@@ -95,7 +97,7 @@ python scripts/apply_wrap.py \
   --output Cat_Model3_Example.png
 ```
 
-For a direct template path, replace `--model` and `--template-root` with `--template path/to/template.png`. Omit `--name` when the wrap should have no name badge. When adding a label, first inspect the selected template and pass both `--name` and a matching `--name-box x,y,width,height`; do not reuse the old Premium coordinates. Use `--rotate-box` for 180-degree model-specific regions, `--rotate-box-cw90` for clockwise quarter-turn regions, and `--rotate-box-ccw90` for counter-clockwise quarter-turn regions. Use `--rotate-front-bumper` only with a verified box for the selected model. Use `--quantize 256` only when needed to meet the byte limit; it changes editable colors but protected pixels are restored and validated.
+For a direct template path, replace `--model` and `--template-root` with `--template path/to/template.png`. Omit `--name` when the wrap should have no name badge. When adding a label, first inspect the selected template and pass both `--name` and a matching `--name-box x,y,width,height`; do not reuse the old Premium coordinates. Use `--rotate-box` for 180-degree model-specific regions, `--rotate-box-cw90` for clockwise quarter-turn regions, and `--rotate-box-ccw90` for counter-clockwise quarter-turn regions. The quarter-turn options preserve the requested region size and do not rescale an oversized subject, so fit the source artwork for its rotated bounds before applying them. Use `--rotate-front-bumper` only with a verified box for the selected model. Use `--quantize 256` only when needed to meet the byte limit; it changes editable colors but protected pixels are restored and validated.
 
 ## Completion checks
 
@@ -106,6 +108,7 @@ Confirm all of the following before handing off the file:
 - protected-pixel diff is 0 and alpha diff is 0;
 - no unintended text, badge, watermark, rendered car, backdrop, or artwork outside the selected official editable mask remains;
 - every primary subject is fully contained within its intended single panel island, with no face, limb, or major detail crossing a seam;
+- after every local rotation, every primary subject remains complete inside the transformed panel island, with no cropped edge, seam interruption, or clipped accessory;
 - every template alpha-0 pixel remains transparent in the final PNG;
 - the final image has been visually inspected against the selected `vehicle_image.png`, including bumper and side-panel directions and world-physical subject orientation;
 - the selected slug and template dimensions are recorded in the delivery note or command log.
