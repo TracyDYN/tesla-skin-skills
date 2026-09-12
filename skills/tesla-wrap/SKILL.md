@@ -45,6 +45,16 @@ Every subject must follow the real vehicle coordinate system after UV mapping:
 - For hood, roof, hatch, bumper, mirror, and narrow strips, use the panel surface normal and `vehicle_image.png` to decide the transform. A 180 degree UV transform is valid only when it produces the correct real-world car view, and it must be rechecked after composition.
 - Do not use a global canvas rotation as a substitute for per-panel orientation. Intentional abstract pattern rotation does not excuse an upside-down main subject.
 
+### Model Y 2025 Premium cat-wrap transform map
+
+For the current 1024 x 1024 `modely-2025-premium` template, the cartoon cat composition uses these verified local UV transforms. Apply them independently from the unrotated source artwork; never stack them on an already transformed output:
+
+- Left lower side-door island: `69,570,165,222` with `--rotate-box-cw90`.
+- Right lower side-door island: `785,573,165,222` with `--rotate-box-ccw90`.
+- Hood or bonnet hero island: `376,111,269,227` with `--rotate-box` for 180 degrees.
+
+These coordinates are template-specific and must be re-inspected if the official template changes. The two side-door transforms intentionally differ because the left and right UV islands map to opposite sides of the vehicle.
+
 ## Workflow
 
 1. Download the selected official template and vehicle reference image. The convenience script can fetch one model or all models into a local clone-shaped directory.
@@ -74,7 +84,7 @@ python scripts/apply_wrap.py \
   --output Cat_Model3_Example.png
 ```
 
-For a direct template path, replace `--model` and `--template-root` with `--template path/to/template.png`. Omit `--name` when the wrap should have no name badge. When adding a label, first inspect the selected template and pass both `--name` and a matching `--name-box x,y,width,height`; do not reuse the old Premium coordinates. Use `--rotate-box` for model-specific regions. Use `--rotate-front-bumper` only with a verified box for the selected model. Use `--quantize 256` only when needed to meet the byte limit; it changes editable colors but protected pixels are restored and validated.
+For a direct template path, replace `--model` and `--template-root` with `--template path/to/template.png`. Omit `--name` when the wrap should have no name badge. When adding a label, first inspect the selected template and pass both `--name` and a matching `--name-box x,y,width,height`; do not reuse the old Premium coordinates. Use `--rotate-box` for 180-degree model-specific regions, `--rotate-box-cw90` for clockwise quarter-turn regions, and `--rotate-box-ccw90` for counter-clockwise quarter-turn regions. Use `--rotate-front-bumper` only with a verified box for the selected model. Use `--quantize 256` only when needed to meet the byte limit; it changes editable colors but protected pixels are restored and validated.
 
 ## Completion checks
 

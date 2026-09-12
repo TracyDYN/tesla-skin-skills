@@ -154,6 +154,71 @@ def rotate_clipped(
                 op[x, y] = region.getpixel((i, j))
 
 
+def rotate_clipped_quarter(
+    output: Image.Image,
+    template: Image.Image,
+    box: tuple[int, int, int, int],
+    angle: int,
+) -> None:
+    """在官方白区内将指定图案旋转四分之一圈，并保持区域尺寸。"""
+
+    if angle not in (-90, 90):
+        raise ValueError("四分之一圈旋转角度必须是 -90 或 90")
+
+    x0, y0, width, height = box
+    if x0 < 0 or y0 < 0 or x0 + width > output.width or y0 + height > output.height:
+        raise ValueError("旋转区域超出画布")
+
+    # 使用最近邻完成精确的90度变换，避免对贴膜像素产生插值颜色。
+    region = output.crop((x0, y0, x0 + width, y0 + height)).rotate(
+        angle,
+        resample=Image.Resampling.NEAREST,
+        expand=False,
+    )
+    template_crop = template.crop((x0, y0, x0 + width, y0 + height))
+    allowed_mask = Image.new("L", (width, height), 0)
+    mask_pixels = allowed_mask.load()
+    template_pixels = template_crop.load()
+    for j in range(height):
+        for i in range(width):
+            if allowed(template_pixels[i, j]):
+                mask_pixels[i, j] = 255
+    rotated_mask = allowed_mask.rotate(
+        angle,
+        resample=Image.Resampling.NEAREST,
+        expand=False,
+    )
+
+    tp = template.load()
+    op = output.load()
+    rotated_mask_pixels = rotated_mask.load()
+    for j in range(height):
+        for i in range(width):
+            x, y = x0 + i, y0 + j
+            if allowed(tp[x, y]) and rotated_mask_pixels[i, j]:
+                op[x, y] = region.getpixel((i, j))
+
+
+def rotate_clipped_cw90(
+    output: Image.Image,
+    template: Image.Image,
+    box: tuple[int, int, int, int],
+) -> None:
+    """在官方白区内将指定图案顺时针旋转90度。"""
+
+    rotate_clipped_quarter(output, template, box, -90)
+
+
+def rotate_clipped_ccw90(
+    output: Image.Image,
+    template: Image.Image,
+    box: tuple[int, int, int, int],
+) -> None:
+    """在官方白区内将指定图案逆时针旋转90度。"""
+
+    rotate_clipped_quarter(output, template, box, 90)
+
+
 def draw_name(
     output: Image.Image,
     template: Image.Image,
@@ -243,6 +308,18 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--design", type=Path, help="已生成的平面图案 PNG")
     parser.add_argument("--output", type=Path, help="输出 PNG，文件名须符合 Tesla 限制")
     parser.add_argument("--rotate-box", type=parse_box, action="append", help="将指定区域旋转 180°，可重复传入")
+    parser.add_argument(
+        "--rotate-box-cw90",
+        type=parse_box,
+        action="append",
+        help="将指定区域顺时针旋转90°，可重复传入",
+    )
+    parser.add_argument(
+        "--rotate-box-ccw90",
+        type=parse_box,
+        action="append",
+        help="将指定区域逆时针旋转90°，可重复传入",
+    )
     parser.add_argument("--rotate-front-bumper", action="store_true", help="将前保险杠区域旋转 180°")
     parser.add_argument("--front-bumper-box", type=parse_box, help="前保险杠区域 x,y,width,height；其他车型需显式提供")
     parser.add_argument("--name", help="需要叠加的精确文字，例如 八月")
@@ -276,6 +353,8 @@ def main() -> int:
     design = Image.open(args.design).convert("RGBA")
     output = mask_design(template, design)
     rotate_boxes = list(args.rotate_box or [])
+    rotate_cw90_boxes = list(args.rotate_box_cw90 or [])
+    rotate_ccw90_boxes = list(args.rotate_box_ccw90 or [])
     if args.rotate_front_bumper:
         bumper_box = args.front_bumper_box or model_bumper_box(args.model, catalog)
         if bumper_box is None:
@@ -287,6 +366,10 @@ def main() -> int:
         rotate_boxes.append(bumper_box)
     for rotate_box in rotate_boxes:
         rotate_clipped(output, template, rotate_box)
+    for rotate_box in rotate_cw90_boxes:
+        rotate_clipped_cw90(output, template, rotate_box)
+    for rotate_box in rotate_ccw90_boxes:
+        rotate_clipped_ccw90(output, template, rotate_box)
     if args.name:
         if args.name_box is None:
             raise ValueError("使用 --name 时必须按所选模板显式提供 --name-box")
