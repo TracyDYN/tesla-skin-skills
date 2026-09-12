@@ -1,6 +1,6 @@
 # Tesla Skin Skills
 
-用于制作 Tesla Paint Shop 自定义车身贴膜的 Codex 技能。技能以 Tesla 官方 [custom-wraps](https://github.com/teslamotors/custom-wraps) 模板为唯一几何依据，把用户照片、风格参考或生成图案安全地合成到指定车型的 UV 画布中。
+用于制作 Tesla Paint Shop 自定义车身贴膜的 Codex 技能。技能以 Tesla 官方 [custom-wraps](https://github.com/teslamotors/custom-wraps) 模板为唯一几何依据，把用户照片、风格参考或生成图案安全地合成到指定车型的 UV 画布中。最终 PNG 的背景必须透明，不添加纯色背景、场景背景或车辆渲染背景。
 
 ## 支持车型
 
@@ -97,6 +97,7 @@ python skills/tesla-wrap/scripts/apply_wrap.py --list-models
 - 前后翼子板、侧后围、尾门等较宽的辅助面放云朵、爱心、星星、色块或主背景的裁切纹样。
 - 前后保险杠、后视镜、侧裙和窄条只放重复小图案或颜色点缀，不放脸部、长文字和复杂场景。
 - 天窗、玻璃、车窗、轮洞、传感器、接缝、黑色区域、透明区域以及模板中其他不可编辑区域不放任何图案，保持官方模板原像素。
+- 模板中 Alpha 为 0 的区域在最终 PNG 中必须继续保持透明。生成提示词要明确要求透明背景，不能用白色或黑色填充透明区域。
 
 不同车型的 UV 面板形状和数量不同。每次都要以所选车型自己的 `template.png` 和 `vehicle_image.png` 重新判断面板职责，不能照搬其他车型的坐标或旋转角度。
 
@@ -106,6 +107,7 @@ python skills/tesla-wrap/scripts/apply_wrap.py --list-models
 - 只有模板 RGBA 恰好为 `(255, 255, 255, 255)` 的纯白不透明像素允许替换。
 - 窗户、轮洞、接缝、传感器、黑色区域、透明区域和其他非白像素必须逐像素保持不变。
 - 图像生成提示词必须明确禁止在天窗、玻璃和所有非白保护区域绘图；最终仍由遮罩脚本逐像素恢复保护区。
+- 输出背景必须透明，不能出现纯色、照片、车辆渲染或其他场景背景；脚本会校验模板的透明像素没有被改变。
 - 不把另一个车型的面板位置、方向或前保险杠坐标套到当前车型。需要倒置区域时使用可重复的 `--rotate-box x,y,width,height`。
 - 目录保留上游官方 slug 以便准确定位模板；项目目录、技能名和通用文案使用 Tesla Custom Wrap。旧版 Premium 前保险杠兼容参数仅对对应模板有效，其他车型使用 `--front-bumper-box` 前必须先核对区域。
 - 名称或徽章在遮罩合成后确定性叠加。使用 `--name` 时必须同时按当前模板显式提供 `--name-box`，需要前保险杠倒置文字时再使用 `--name-angle 180`。
@@ -113,7 +115,7 @@ python skills/tesla-wrap/scripts/apply_wrap.py --list-models
 
 ## 校验
 
-`apply_wrap.py` 会自动检查输出尺寸、保护区差异和 Alpha 差异。交付前应确认保护区差异和 Alpha 差异均为 `0`。文件过大时，可以使用 `--quantize 256` 压缩可编辑区域的颜色，再重新校验。
+`apply_wrap.py` 会自动检查输出尺寸、保护区差异、透明背景差异和 Alpha 差异。交付前应确认保护区差异、透明背景差异和 Alpha 差异均为 `0`。文件过大时，可以使用 `--quantize 256` 压缩可编辑区域的颜色，再重新校验。
 
 安装依赖：
 

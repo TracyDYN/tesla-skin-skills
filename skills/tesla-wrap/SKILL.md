@@ -20,6 +20,7 @@ Use the folder slug exactly as written. Each official folder contains its own `t
 - Start from the exact selected `template.png` in the Tesla repository: <https://github.com/teslamotors/custom-wraps>.
 - Keep the original canvas size, panel contours, seams, transparent/black regions, and every non-white protected pixel. The only editable mask is an opaque pixel whose template RGBA value is exactly `(255,255,255,255)`.
 - Do not let generated artwork redraw the template, windows, wheel openings, sensors, or seams. Compose the artwork through `scripts/apply_wrap.py`, which restores protected pixels and reports the protected-pixel and alpha diffs.
+- The final PNG must have a transparent background wherever the selected template has alpha 0. Never add a solid white, black, colored, photographic, or rendered background; template transparency must remain byte-for-byte intact.
 - Preserve the selected template dimensions. Export PNG under 1,000,000 bytes, with an ASCII filename containing only letters, digits, and underscores and at most 30 characters including `.png`. This skill keeps the user's stricter filename rule even though the official README also mentions dashes and spaces.
 
 ## Panel role mapping from the reference wrap
@@ -36,7 +37,7 @@ Use the supplied cartoon cat wrap as a composition reference, while using the se
 ## Workflow
 
 1. Download the selected official template and vehicle reference image. The convenience script can fetch one model or all models into a local clone-shaped directory.
-2. Use the built-in image generation tool for the visual artwork. Label the selected template as the geometry reference, the vehicle image as the car-view reference, user photos as identity references, and any prior wrap as a style reference. Ask for a flat UV texture. State that artwork may change only exact opaque white template pixels; all dark, transparent, glass, roof, sunroof, window, wheel, sensor, seam, and other non-white pixels must remain untouched. Do not ask the model to render text; raster text is added deterministically afterward.
+2. Use the built-in image generation tool for the visual artwork. Label the selected template as the geometry reference, the vehicle image as the car-view reference, user photos as identity references, and any prior wrap as a style reference. Ask for a flat UV texture with a transparent background and no scene, car render, or backdrop. State that artwork may change only exact opaque white template pixels; all alpha-0, dark, transparent, glass, roof, sunroof, window, wheel, sensor, seam, and other non-white pixels must remain untouched. Do not ask the model to render text; raster text is added deterministically afterward.
 3. Match the selected model's panel count and body shape. Keep faces and focal graphics inside their intended body-panel islands. Do not copy one model's bounds, rotations, or panel assumptions to another model.
 4. Orient the UV artwork for the selected car view. Inspect `vehicle_image.png` and the official template to determine which islands are left, right, front, rear, roof, mirror, or bumper. Use `--rotate-box x,y,width,height` for any panel that must be inverted; repeat the option for multiple regions. `--rotate-front-bumper` is a convenience option only when a matching `--front-bumper-box` is supplied. The catalog includes one legacy Premium box `245,9,532,106`.
 5. Add an exact name or label only after masking. Use `--name` with a Chinese-capable font and an explicitly inspected `--name-box` wholly inside an editable white panel. The script now refuses a missing name box so a coordinate from another vehicle cannot be reused. Set `--name-angle 180` when text belongs to an upside-down region. The script clips text and backgrounds back to the official mask.
@@ -71,6 +72,7 @@ Confirm all of the following before handing off the file:
 - output is PNG, matches the selected template dimensions, and is within the byte limit;
 - filename matches the allowed ASCII pattern and length;
 - protected-pixel diff is 0 and alpha diff is 0;
-- no unintended text, badge, watermark, rendered car, or artwork outside the selected official editable mask remains;
+- no unintended text, badge, watermark, rendered car, backdrop, or artwork outside the selected official editable mask remains;
+- every template alpha-0 pixel remains transparent in the final PNG;
 - the final image has been visually inspected against the selected `vehicle_image.png`, including bumper and side-panel directions;
 - the selected slug and template dimensions are recorded in the delivery note or command log.

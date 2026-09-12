@@ -208,9 +208,10 @@ def quantize_editable(output: Image.Image, template: Image.Image, colors: int) -
     return quantized
 
 
-def validate(template: Image.Image, output: Image.Image) -> tuple[int, int, int, int]:
+def validate(template: Image.Image, output: Image.Image) -> tuple[int, int, int, int, int]:
     protected_diff = 0
     alpha_diff = 0
+    transparent_diff = 0
     protected_count = 0
     editable_count = 0
     tp = template.load()
@@ -221,13 +222,15 @@ def validate(template: Image.Image, output: Image.Image) -> tuple[int, int, int,
             result = op[x, y]
             if source[3] != result[3]:
                 alpha_diff += 1
+            if source[3] == 0 and result[3] != 0:
+                transparent_diff += 1
             if allowed(source):
                 editable_count += 1
             else:
                 protected_count += 1
                 if source != result:
                     protected_diff += 1
-    return editable_count, protected_count, protected_diff, alpha_diff
+    return editable_count, protected_count, protected_diff, alpha_diff, transparent_diff
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -303,14 +306,14 @@ def main() -> int:
     args.output.parent.mkdir(parents=True, exist_ok=True)
     output.save(args.output, format="PNG", optimize=True)
     saved = Image.open(args.output).convert("RGBA")
-    editable, protected, protected_diff, alpha_diff = validate(template, saved)
+    editable, protected, protected_diff, alpha_diff, transparent_diff = validate(template, saved)
     size = args.output.stat().st_size
     print(
         f"尺寸={saved.width}x{saved.height}; 可贴像素={editable}; "
         f"保护像素={protected}; 保护区差异={protected_diff}; "
-        f"Alpha差异={alpha_diff}; 字节={size}"
+        f"透明背景差异={transparent_diff}; Alpha差异={alpha_diff}; 字节={size}"
     )
-    if (saved.size != template.size) or protected_diff or alpha_diff:
+    if (saved.size != template.size) or protected_diff or alpha_diff or transparent_diff:
         raise ValueError("输出未通过模板像素/透明度校验")
     if size > args.max_bytes:
         raise ValueError(f"文件超过大小限制：{size} > {args.max_bytes} bytes，请使用 --quantize")
