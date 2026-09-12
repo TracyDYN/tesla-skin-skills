@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""将生成的图案安全地套入 Tesla Model Y Premium 官方 UV 模板。"""
+"""将生成的图案安全地套入 Tesla 官方车型 UV 模板。"""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 DEFAULT_CATALOG = Path(__file__).resolve().parents[1] / "models.json"
-# 仅保留旧版 Model Y Premium 命令的兼容默认值；其他车型必须显式传入区域。
+# 仅保留旧版 Premium 命令的兼容默认值；其他车型必须显式传入区域。
 LEGACY_PREMIUM_BUMPER = (245, 9, 532, 106)
 MAX_NAME_LENGTH = 30
 DEFAULT_MAX_BYTES = 1_000_000
@@ -234,7 +234,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="安全地生成 Tesla 官方车型自定义贴膜 PNG")
     parser.add_argument("--catalog", type=Path, default=DEFAULT_CATALOG, help="车型目录 JSON")
     parser.add_argument("--list-models", action="store_true", help="列出官方仓库支持的全部车型并退出")
-    parser.add_argument("--model", help="官方车型 slug，例如 modely-2025-premium")
+    parser.add_argument("--model", help="官方车型 slug，例如 model3-2024-base")
     parser.add_argument("--template", type=Path, help="官方 template.png；不传时由 --model 和 --template-root 定位")
     parser.add_argument("--template-root", type=Path, help="官方 custom-wraps 仓库根目录")
     parser.add_argument("--design", type=Path, help="已生成的平面图案 PNG")

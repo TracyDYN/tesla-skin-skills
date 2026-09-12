@@ -24,7 +24,7 @@
 ## 目录结构
 
 ```text
-skills/tesla-modely-wrap/
+skills/tesla-wrap/
 ├── SKILL.md                  # Codex 技能说明
 ├── agents/openai.yaml        # 技能显示信息和默认提示词
 ├── models.json               # 官方车型、模板路径和下载地址
@@ -38,7 +38,7 @@ skills/tesla-modely-wrap/
 在 Codex 中调用：
 
 ```text
-$tesla-modely-wrap
+$tesla-wrap
 ```
 
 说明目标车型，并提供猫咪照片、风格参考和需要的文字元素。生成时应把对应的 `template.png` 作为几何参考，把 `vehicle_image.png` 作为车机视角参考。最终交付的是一张平面 UV PNG，不是车辆渲染图。
@@ -48,35 +48,35 @@ $tesla-modely-wrap
 需要 Python 3 和 Pillow。下载全部车型的模板及车辆参考图：
 
 ```powershell
-python skills/tesla-modely-wrap/scripts/fetch_templates.py `
+python skills/tesla-wrap/scripts/fetch_templates.py `
   --dest official_custom_wraps
 ```
 
 只下载一个车型，或只下载模板：
 
 ```powershell
-python skills/tesla-modely-wrap/scripts/fetch_templates.py `
-  --model modely-2025-premium `
+python skills/tesla-wrap/scripts/fetch_templates.py `
+  --model model3 `
   --dest official_custom_wraps `
   --no-vehicle-image
 ```
 
 ### 合成输出
 
-从官方仓库目录加载 Model Y Premium 模板：
+从官方仓库目录加载指定车型模板：
 
 ```powershell
-python skills/tesla-modely-wrap/scripts/apply_wrap.py `
-  --model modely-2025-premium `
+python skills/tesla-wrap/scripts/apply_wrap.py `
+  --model model3 `
   --template-root official_custom_wraps `
   --design generated_design.png `
-  --output Cat_ModelY_Example.png
+  --output Cat_Model3_Example.png
 ```
 
 也可以直接传入模板路径：
 
 ```powershell
-python skills/tesla-modely-wrap/scripts/apply_wrap.py `
+python skills/tesla-wrap/scripts/apply_wrap.py `
   --template path/to/template.png `
   --design generated_design.png `
   --output Cybertruck_Cat.png
@@ -85,7 +85,7 @@ python skills/tesla-modely-wrap/scripts/apply_wrap.py `
 列出目录中的全部车型：
 
 ```powershell
-python skills/tesla-modely-wrap/scripts/apply_wrap.py --list-models
+python skills/tesla-wrap/scripts/apply_wrap.py --list-models
 ```
 
 ## 几何和安全约束
@@ -94,7 +94,7 @@ python skills/tesla-modely-wrap/scripts/apply_wrap.py --list-models
 - 只有模板 RGBA 恰好为 `(255, 255, 255, 255)` 的纯白不透明像素允许替换。
 - 窗户、轮洞、接缝、传感器、黑色区域、透明区域和其他非白像素必须逐像素保持不变。
 - 不把另一个车型的面板位置、方向或前保险杠坐标套到当前车型。需要倒置区域时使用可重复的 `--rotate-box x,y,width,height`。
-- Model Y Premium 保留旧版前保险杠兼容参数。其他车型使用 `--front-bumper-box` 前必须先从对应模板核对区域。
+- 目录保留上游官方 slug 以便准确定位模板；项目目录、技能名和通用文案使用 Tesla Custom Wrap。旧版 Premium 前保险杠兼容参数仅对对应模板有效，其他车型使用 `--front-bumper-box` 前必须先核对区域。
 - 名称或徽章在遮罩合成后确定性叠加。需要前保险杠倒置文字时使用 `--name-angle 180`。
 - 输出必须是 PNG，文件小于等于 1,000,000 bytes，文件名只允许英文、数字和下划线，包含 `.png` 在内不超过 30 个字符。
 
@@ -108,7 +108,7 @@ python skills/tesla-modely-wrap/scripts/apply_wrap.py --list-models
 python -m pip install pillow
 ```
 
-技能本身通过 Codex `quick_validate.py` 校验；脚本通过 Python 编译检查，并以 Cybertruck、Model 3 和 Model Y Premium 模板完成跨尺寸合成验证。
+技能本身通过 Codex `quick_validate.py` 校验；脚本通过 Python 编译检查，并以 Cybertruck、Model 3 和 Premium 模板完成跨尺寸合成验证。
 
 ## 许可与来源
 

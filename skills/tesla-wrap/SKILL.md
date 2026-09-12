@@ -1,5 +1,5 @@
 ---
-name: tesla-modely-wrap
+name: tesla-wrap
 description: "Create or revise Tesla custom-wrap PNGs for every vehicle template in teslamotors/custom-wraps while preserving the selected official UV mask, geometry, orientation, optional labels, and Tesla file limits."
 ---
 
@@ -26,8 +26,8 @@ Use the folder slug exactly as written. Each official folder contains its own `t
 
 1. Download the selected official template and vehicle reference image. The convenience script can fetch one model or all models into a local clone-shaped directory.
 2. Use the built-in image generation tool for the visual artwork. Label the selected template as the geometry reference, the vehicle image as the car-view reference, user photos as identity references, and any prior wrap as a style reference. Ask for a flat UV texture. Repeat the protected-region invariant in the prompt. Do not ask the model to render text; raster text is added deterministically afterward.
-3. Match the selected model's panel count and body shape. Keep faces and focal graphics inside their intended body-panel islands. Do not copy Model Y-specific bounds, rotations, or panel assumptions to another model.
-4. Orient the UV artwork for the selected car view. Inspect `vehicle_image.png` and the official template to determine which islands are left, right, front, rear, roof, mirror, or bumper. Use `--rotate-box x,y,width,height` for any panel that must be inverted; repeat the option for multiple regions. `--rotate-front-bumper` is a convenience option only when a matching `--front-bumper-box` is supplied. The catalog includes the legacy Model Y Premium box `245,9,532,106`.
+3. Match the selected model's panel count and body shape. Keep faces and focal graphics inside their intended body-panel islands. Do not copy one model's bounds, rotations, or panel assumptions to another model.
+4. Orient the UV artwork for the selected car view. Inspect `vehicle_image.png` and the official template to determine which islands are left, right, front, rear, roof, mirror, or bumper. Use `--rotate-box x,y,width,height` for any panel that must be inverted; repeat the option for multiple regions. `--rotate-front-bumper` is a convenience option only when a matching `--front-bumper-box` is supplied. The catalog includes one legacy Premium box `245,9,532,106`.
 5. Add an exact name or label only after masking. Use `--name` with a Chinese-capable font and a box wholly inside an editable white panel. Set `--name-angle 180` when text belongs to an upside-down region. The script clips text and backgrounds back to the official mask.
 6. Run the helper with `--model` or an explicit `--template`, inspect the final PNG, and check its reported protected-pixel diff and alpha diff are both zero. If the file is too large, retry with `--quantize 256` or a smaller palette, then re-check the invariants and preview.
 
@@ -37,7 +37,7 @@ The helper requires Pillow (`python -m pip install pillow`) and keeps the mask l
 
 ```text
 python scripts/apply_wrap.py --list-models
-python scripts/fetch_templates.py --model modely-2025-premium --dest official_custom_wraps
+python scripts/fetch_templates.py --model model3 --dest official_custom_wraps
 python scripts/fetch_templates.py --dest official_custom_wraps
 ```
 
@@ -45,10 +45,10 @@ Generate a wrap from a local clone of the official repository:
 
 ```text
 python scripts/apply_wrap.py \
-  --model modely-2025-premium \
+  --model model3 \
   --template-root official_custom_wraps \
   --design generated_design.png \
-  --output Cat_ModelY_Example.png \
+  --output Cat_Model3_Example.png \
   --rotate-front-bumper \
   --name August --name-box 414,31,212,58 --name-angle 180 \
   --font "C:\\Windows\\Fonts\\msyh.ttc"
