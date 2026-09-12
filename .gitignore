@@ -1,0 +1,10 @@
+# Python 缓存
+__pycache__/
+*.py[cod]
+
+# 本地测试下载和生成物
+test_official_assets/
+official_custom_wraps/
+official_templates/
+*Cat*.png
+test_*.png
