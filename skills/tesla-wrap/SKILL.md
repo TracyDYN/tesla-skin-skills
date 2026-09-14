@@ -69,6 +69,17 @@ For the current 1024 x 1024 `modely-2025-premium` template, the cartoon cat comp
 
 These coordinates are template-specific and must be re-inspected if the official template changes. The two side-door transforms intentionally differ because the left and right UV islands map to opposite sides of the vehicle.
 
+## Full panel coverage and fake transparency
+
+An observed Model Y Premium failure left gray checkerboard strips inside editable front-fender edges, bumper lips, mirrors, and rocker strips. These were opaque RGB artwork imitating transparency, not actual alpha holes. The files passed protected-pixel and alpha checks despite visibly incomplete panel coverage. Those checks alone do not establish a complete fill.
+
+- Determine whether a pixel needs artwork from the exact official template, never from a generated outline or a viewer's checkerboard background. Every exact opaque white template pixel must receive intentional opaque artwork through the panel boundary. Preserve actual template transparency and all protected pixels.
+- In generation/edit prompts, explicitly forbid painted transparency grids, accidental gray/blank borders, and inset replacement panel outlines inside editable islands. Extend matching background artwork to the official edges; keep the existing subjects and their orientations.
+- Inspect exported files at full resolution and zoom into both front-fender inner edges, bumper lips, mirrors, rocker strips, and narrow secondary islands. Compare suspicious strips against the official mask and inspect RGB as well as alpha. Preview over contrasting solid backgrounds: a baked checkerboard remains visible regardless of the backdrop.
+- Do not classify all gray, white, black, or checked artwork as a defect. Preserve intentional fur, shadows, comic contours, mechanical accents, and decorative checks. Color thresholds may flag candidates but require visual and template-based review.
+- For a repair, generate matching edge-fill artwork and composite only the affected editable areas through the official mask. Check alignment before compositing; do not paste shifted generated panel edges or black margins into the official white region. Avoid indiscriminately replacing a fixed-width band on every panel, which can alter intact subjects or introduce smearing. Inspect repaired edges for residual grids, dark slivers, stretching, and visible joins.
+- Revalidate opacity inside the editable mask, protected pixels, template transparency, dimensions, and file size after export. Compare explicitly unchanged areas against the input (for example, preserve a previously approved hood pixel-for-pixel during an edge-only repair). For a batch, inspect every final file, not only the reported example.
+
 ## Workflow
 
 1. Download the selected official template and vehicle reference image. The convenience script can fetch one model or all models into a local clone-shaped directory.
@@ -77,6 +88,8 @@ These coordinates are template-specific and must be re-inspected if the official
 4. Perform a world-up review in the car view. On both side doors, verify that heads point toward the sunroof and feet point toward the side skirt. Verify every face, person, animal, object, horizon, wheel, shadow, and text baseline against gravity and the vehicle front/rear direction. Fix each panel transform before continuing.
 5. Add an exact name or label only after masking. Use `--name` with a Chinese-capable font and an explicitly inspected `--name-box` wholly inside an editable white panel. The script now refuses a missing name box so a coordinate from another vehicle cannot be reused. Set `--name-angle 180` only when the selected panel mapping requires it, then verify the text is upright in the car view. The script clips text and backgrounds back to the official mask.
 6. Run the helper with `--model` or an explicit `--template`, inspect the final PNG, and check its reported protected-pixel and alpha diffs are both zero. If the file is too large, retry with `--quantize 256` or a smaller palette, then re-check the invariants and preview.
+
+7. Perform the full-panel coverage review above on the exported PNG. Zero alpha/protected-pixel diffs do not detect opaque fake-transparency grids; resolve any visually unfilled editable areas before delivery.
 
 ## Deterministic helper
 
@@ -107,6 +120,7 @@ Confirm all of the following before handing off the file:
 - output is PNG, matches the selected template dimensions, and is within the byte limit;
 - filename matches the allowed ASCII pattern and length;
 - protected-pixel diff is 0 and alpha diff is 0;
+- every editable template pixel is opaque and intentionally filled, with no baked transparency grid or unintended blank edge strip; narrow islands and panel boundaries have been visually checked in every deliverable;
 - no unintended text, badge, watermark, rendered car, backdrop, or artwork outside the selected official editable mask remains;
 - every primary subject is fully contained within its intended single panel island, with no face, limb, or major detail crossing a seam;
 - after every local rotation, every primary subject remains complete inside the transformed panel island, with no cropped edge, seam interruption, or clipped accessory;
